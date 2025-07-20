@@ -108,7 +108,7 @@ class OcrActivity : AppCompatActivity() {
                 imageFile.name,
                 requestImageFile
             )
-            viewModel.scanReceipt(multipartBody)
+            viewModel.scanReceipt(this)
         }
     }
 

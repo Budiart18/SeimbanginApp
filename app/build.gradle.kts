@@ -37,7 +37,7 @@ android {
             buildConfigField("String", "BASE_URl", "\"https://seimbangin-api-175982326551.asia-southeast2.run.app/\"")
         }
         create("integration") {
-            buildConfigField("String", "BASE_URl", "\"https://seimbangin.vercel.app/\"")
+            buildConfigField("String", "BASE_URl", "\"https://seimbangin-api-gateway-production.up.railway.app/\"")
         }
         create("mock") {
             buildConfigField("String", "BASE_URl", "\"https://seimbangin.vercel.app/\"")

@@ -7,13 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.aeryz.seimbanginapp.data.local.database.entity.TransactionEntity
 import com.aeryz.seimbanginapp.data.local.datastore.UserPreferenceDataSource
 import com.aeryz.seimbanginapp.data.network.model.advisor.AdvisorResponse
+import com.aeryz.seimbanginapp.data.network.model.profile.FinanceProfile
 import com.aeryz.seimbanginapp.data.network.model.profile.ProfileResponse
 import com.aeryz.seimbanginapp.data.network.model.transactionHistory.TransactionHistoryResponse
 import com.aeryz.seimbanginapp.data.repository.AuthRepository
+import com.aeryz.seimbanginapp.data.repository.GeminiAiRepository
 import com.aeryz.seimbanginapp.data.repository.LocalTransactionRepository
 import com.aeryz.seimbanginapp.data.repository.TransactionRepository
 import com.aeryz.seimbanginapp.model.TransactionItem
 import com.aeryz.seimbanginapp.utils.ResultWrapper
+import com.google.ai.client.generativeai.type.Content
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -21,7 +24,8 @@ class HomeViewModel(
     private val authRepository: AuthRepository,
     private val transactionRepository: TransactionRepository,
     private val localTransactionRepository: LocalTransactionRepository,
-    private val userPreferenceDataSource: UserPreferenceDataSource
+    private val userPreferenceDataSource: UserPreferenceDataSource,
+    private val geminiAiRepository: GeminiAiRepository
 ) : ViewModel() {
 
     private val _profileData = MutableLiveData<ResultWrapper<ProfileResponse>>()
@@ -40,8 +44,8 @@ class HomeViewModel(
     val localAdvisor: LiveData<String?>
         get() = _localAdvisor
 
-    private val _aiAdvisor = MutableLiveData<ResultWrapper<AdvisorResponse>>()
-    val aiAdvisor: LiveData<ResultWrapper<AdvisorResponse>>
+    private val _aiAdvisor = MutableLiveData<ResultWrapper<String>>()
+    val aiAdvisor: LiveData<ResultWrapper<String>>
         get() = _aiAdvisor
 
     fun getProfileData() {
@@ -88,9 +92,9 @@ class HomeViewModel(
         }
     }
 
-    fun getAdviseFromAI() {
+    fun getAdviseFromAI(financeProfile: FinanceProfile) {
         viewModelScope.launch(Dispatchers.IO) {
-            transactionRepository.getAdvice().collect {
+            geminiAiRepository.generateFinancialAdvice(financeProfile).collect {
                 _aiAdvisor.postValue(it)
             }
         }

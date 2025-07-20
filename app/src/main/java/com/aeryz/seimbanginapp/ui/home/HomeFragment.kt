@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.aeryz.seimbanginapp.R
+import com.aeryz.seimbanginapp.data.network.model.profile.FinanceProfile
 import com.aeryz.seimbanginapp.data.network.model.transactionHistory.toTransactionItemList
 import com.aeryz.seimbanginapp.databinding.FragmentHomeBinding
 import com.aeryz.seimbanginapp.model.TransactionItem
@@ -94,7 +95,7 @@ class HomeFragment : Fragment() {
                         } else {
                             binding.cvFinancialProfileInfo.isVisible = false
                             binding.cvAdvisor.isVisible = true
-                            observeAdviseFromAI()
+                            observeAdviseFromAI(financeProfile)
                         }
                     }
                     getTransactionHistory()
@@ -190,16 +191,16 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun observeAdviseFromAI() {
+    private fun observeAdviseFromAI(financeProfile: FinanceProfile) {
         binding.icRefreshAdvisor.setOnClickListener {
-            viewModel.getAdviseFromAI()
+            viewModel.getAdviseFromAI(financeProfile)
         }
         viewModel.aiAdvisor.observe(viewLifecycleOwner) { resultWrapper ->
             resultWrapper.proceedWhen(
                 doOnSuccess = {
                     binding.tvUserAdvise.isVisible = true
                     binding.pbLoadingAdvisor.isVisible = false
-                    val adviseResult = it.payload?.data?.replace("Output:\n", "")
+                    val adviseResult = it.payload
                     adviseResult?.let { it1 -> viewModel.saveAdvise(it1) }
                 },
                 doOnLoading = {

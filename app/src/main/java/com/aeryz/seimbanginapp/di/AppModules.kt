@@ -11,7 +11,7 @@ import com.aeryz.seimbanginapp.data.network.datasource.SeimbanginDataSourceImpl
 import com.aeryz.seimbanginapp.data.network.service.ApiConfig
 import com.aeryz.seimbanginapp.data.repository.AuthRepository
 import com.aeryz.seimbanginapp.data.repository.AuthRepositoryImpl
-import com.aeryz.seimbanginapp.data.repository.ChatAiRepository
+import com.aeryz.seimbanginapp.data.repository.GeminiAiRepository
 import com.aeryz.seimbanginapp.data.repository.LocalTransactionRepository
 import com.aeryz.seimbanginapp.data.repository.LocalTransactionRepositoryImpl
 import com.aeryz.seimbanginapp.data.repository.TransactionRepository
@@ -68,7 +68,7 @@ object AppModules {
     private val repositoryModule = module {
         single<AuthRepository> { AuthRepositoryImpl(get()) }
         single<TransactionRepository> { TransactionRepositoryImpl(get()) }
-        single { ChatAiRepository() }
+        single { GeminiAiRepository() }
         single<LocalTransactionRepository> { LocalTransactionRepositoryImpl(get()) }
     }
 
@@ -76,7 +76,7 @@ object AppModules {
         viewModel { LoginViewModel(get(), get()) }
         viewModel { RegisterViewModel(get()) }
         viewModel { SplashViewModel(get(), get()) }
-        viewModel { HomeViewModel(get(), get(), get(), get()) }
+        viewModel { HomeViewModel(get(), get(), get(), get(), get()) }
         viewModel { ProfileViewModel(get(), get(), get()) }
         viewModel { FinancialProfileViewModel(get()) }
         viewModel { EditProfileViewModel(get()) }
